@@ -10,4 +10,8 @@ ADS-kommunikointi PLC:n ja PC-ohjelman välillä tapahtuu TCP/IP-yhteyttä käyt
 
 TwinCAT ADS on helppo tapa siirtää tietoa PLC:stä muihin tietojärjestelmiin. Vaihtoehtoinen japa on välittää data OPC UA -protokollan avulla. OPC UA on standardoitu tiedonsiirtotapa, jonka avulla eri valmistajien laitteet ja ohjelmistot voivat keskustella tietoturvallisesti keskenään. Jos käytetään vain Beckhoffin laitteita, ADS tarjoaa yksinkertaisemman tavan välittää tietoa. ADS-yhteyden avulla voidaan esimerkiksi muuttaa TwinCAT-ohjelman muuttujan arvoa PC-ohjelmasta käsin. Vastaavasti TwinCAT-ohjelman muuttujien arvoja voidaan siirtää PLC-ohjelmasta PC-ohjelmaan.
 
+# TwinCAT-ohjelmat ADS-yhteyden testaamista varten
+
+TwinCAT-ohjelma 
+
 
