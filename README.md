@@ -116,3 +116,19 @@ Mittausten arvoja päivitetään puolen sekunnin välein. Ohjelma ei mittaa oike
 # ADS-yhteyttä käyttävä Python-ohjelma
 
 Python-ohjelma [adsreader.py](/adsreader.py/) avaa ensin ADS-yhteyden TwinCAT-ohjelmaan ja asettaa TwinCAT-ohjelman muuttujan start arvon TRUEksi. Tämän jälkeen Python-ohjelma lukee mittausdataa ADS-yhteyden kautta.
+
+ADS-yhteyden muodostamista varten täytyy asentaa pyads-kirjasto. Lisäksi tarvitaan kirjasto requests, jos mittaukset halutaan välittää HTTP POST -metodilla eteen päin. Kirjastot asennetaan pip-ohjelmalla:
+```
+pip install pyads
+pip install requests
+```
+Lisää ohjelman alkuun seuraavat import-lauseet:
+```Python
+import pyads
+import requests    
+import time
+import json
+import msvcrt #kbhit
+
+```
+
