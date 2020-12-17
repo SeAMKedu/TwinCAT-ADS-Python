@@ -37,24 +37,22 @@ Ohjelman muuttujien määrittelyosa näyttää tältä:
 PROGRAM MAIN
 
 VAR	
-		// tietue mittauksia varten
-	measurementData : Measurements;
+    // tietue mittauksia varten
+    measurementData : Measurements;
 
-	start: BOOL; // start-painike
-	reset: BOOL; // reset-painike
+    start: BOOL; // start-painike
+    reset: BOOL; // reset-painike
 	
-	// yksi ajastin riittaa
-	timer1: TON;
-	// tilat esitetaan INT-muuttujalla
-	// (ENUM olisi vielä parempi)
-	step: INT;
-	counter: INT;
-	// triggeri start-painiketta varten
-	startTriggered: BOOL;
-	trigger: F_TRIG;	
+    // yksi ajastin riittaa
+    timer1: TON;
+    // tilat esitetaan INT-muuttujalla
+    step: INT;
+    counter: INT;
+    // triggeri start-painiketta varten
+    startTriggered: BOOL;
+    trigger: F_TRIG;	
 	
-	sysTime : GETSYSTEMTIME;
-	
+    sysTime : GETSYSTEMTIME;
 END_VAR
 ```
 Itse ohjelmakoodi on alla:
@@ -63,7 +61,7 @@ Itse ohjelmakoodi on alla:
 timer1.IN := TRUE;   // timer päälle
   
 IF reset THEN
-	  step := 0;
+    step := 0;
 END_IF 
 
 // otetaan nouseva reuna start-paimikkeesta
@@ -81,36 +79,35 @@ CASE step OF
   1 : // odotellaan 0.5 sek
     // asetetaan aika
     timer1.PT := T#500MS;
-	  counter := counter + 1;
+    counter := counter + 1;
    
     IF timer1.Q THEN
-      // IN arvoon FALSE ja timerin kutsu
-      timer1(IN := FALSE);
-      // seuraavaan tilaan
-      step := 2;
+        // IN arvoon FALSE ja timerin kutsu
+        timer1(IN := FALSE);
+        // seuraavaan tilaan
+        step := 2;
     END_IF
 
    2 : 	// tehdään mittauksia
 	
     // otetaan kellonaika ja kopioidaan output structiin
     sysTime(timeLoDW => measurementData.timeLo, 
-	    timeHiDW =>  measurementData.timeHi);
-   
-	  measurementData.counter := counter;
+          timeHiDW =>  measurementData.timeHi);
+    measurementData.counter := counter;
 	
-	  // generoi mittauksia. amplitudi +/- 1. Jaksonaika 5-10 sekuntia
-	  // eri mittausten välillä noin 120 asteen vaihe-ero
-	  measurementData.measurement1 := SIN(counter / 24.0);
-	  measurementData.measurement2 := 1.1 * SIN(counter / 240.0 + 2);
-	  measurementData.measurement3 := 0.9 * SIN(counter / 240.0 + 4);
+    // generoi mittauksia. amplitudi +/- 1. Jaksonaika 5-10 sekuntia
+    // eri mittausten välillä noin 120 asteen vaihe-ero
+    measurementData.measurement1 := SIN(counter / 24.0);
+    measurementData.measurement2 := 1.1 * SIN(counter / 240.0 + 2);
+    measurementData.measurement3 := 0.9 * SIN(counter / 240.0 + 4);
    
-   	measurementData.arrayValue := 1;
+    measurementData.arrayValue := 1;
 	
-	  // mennään takaisin odotustilaan
-	  step := 1;
- END_CASE	
- // kutsutaan ajastinta joka kierroksella
- timer1();  
+    // mennään takaisin odotustilaan
+    step := 1;
+END_CASE	
+// kutsutaan ajastinta joka kierroksella
+timer1();  
 ```
 Ohjelma alkaa tuottamaan mittauksia, kun muuttuja start saa arvon TRUE. Tämän muuttujan arvo voidaan asettaa myös PC-ohjelmasta ADS:n välityksella.
 
