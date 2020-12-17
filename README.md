@@ -129,6 +129,70 @@ import requests
 import time
 import json
 import msvcrt #kbhit
-
 ```
+Ohjelman alussa avataan ADS-yhteys lauseilla pyads.open_port() ja pyads.AmsAddr('127.0.0.1.1.1',851). Jälkimmäisessä lauseessa annetaan ADS-osoite ja portti. ADS-osoite muistuttaa IP-osoitetta. Portti on yleensä 851, mutta sen voi tarkistaa vielä TwinCATin puolelta.
+```Python
+# yhteyden avaaminen
+pyads.open_port()
+time.sleep(0.5)
+# seuraava palauttaa ADS-osoitteen
+print(pyads.get_local_address())
+time.sleep(0.5)
+# alustus, annetaan ADS-osoite ja portti 851
+adr = pyads.AmsAddr('127.0.0.1.1.1',851)
+time.sleep(0.5)
+```
+ADS-komentojen välillä on hyvä odottaa puoli sekuntia, muuten TwinCAT-ohjelma saattaa kaatua.
 
+Alustusten jälkeen luetaan toistolauseessa mittauksia ADS:n kautta. 
+```Python
+i = 0
+while True:
+    # luetaan muuttujien arvot
+    m1 = pyads.read_by_name(adr, 'MAIN.measurementData.measurement1', pyads.PLCTYPE_REAL)
+    time.sleep(0.1)
+    m2 = pyads.read_by_name(adr, 'MAIN.measurementData.measurement2', pyads.PLCTYPE_REAL)
+    time.sleep(0.1)
+    m3 = pyads.read_by_name(adr, 'MAIN.measurementData.measurement3', pyads.PLCTYPE_REAL)
+    time.sleep(0.1)
+
+    # tulostetaan
+    print(m1, m2, m3)
+```
+Muuttujien arvojen lukeminen tapahtuu lauseella pyads.read_by_name. Ensimmäinen parametri on edellä muodostettu ADS-osoite, toinen parametri on luettava TwinCAT-muuttuja ja kolmas parametri on luettavan muuttujan tyyppi.
+
+Muuttujan arvojen lukemisten väliin täytyy laittaa sleep (toistolauseen lopussa). Toisto loppuu, kun käyttäjä painaa jotain näppäintä. Lopuksi suljetaan ADS-portti.
+
+```Python
+    # kannattaa laittaa sleep väliin
+    time.sleep(0.7)
+
+    if msvcrt.kbhit():
+        time.sleep(0.5)
+        break
+
+    i += 1
+
+time.sleep(0.5)
+pyads.close_port()
+time.sleep(0.1)
+```
+Alla on vielä esimerkki, jossa näytetään, miten mittaukset kootaan dictionaryyn, sarjallistetaan JSON-muotoon ja lähetetään palvelimelle HTTP POST:lla.
+```Python
+    # tulostetaan
+    print(m1, m2, m3)
+
+    # dictionary mittauksia varten
+    measurement = { }
+    measurement['id'] = i
+    measurement['pressure'] = m1
+    measurement['temperature'] = m2
+    measurement['humidity'] = m3
+
+    # muunna json-muotoon ja lähetä POST:lla
+    s = json.dumps(measurement)
+    r = requests.post('http://localhost:5000/uusimittaus', data = s)
+    
+    # kannattaa laittaa sleep väliin
+    time.sleep(0.7)
+```
