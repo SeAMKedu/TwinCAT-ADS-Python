@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <DUT Name="Measurements" Id="{6f3f9839-fdc9-4be2-a9d0-e8280fb19f02}">
+    <Declaration><![CDATA[TYPE Measurements :
+STRUCT
+	timeHi : UDINT; 		// aika
+	timeLo : UDINT;	 		// aika
+	measurement1 : REAL;	// mittaus 1
+	measurement2 : REAL;	// mittaus 2
+	measurement3 : REAL;	// mittaus 3
+	counter : INT;			// juokseva numero
+	arrayValue: INT;		// jotain
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

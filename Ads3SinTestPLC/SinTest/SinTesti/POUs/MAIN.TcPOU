@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <POU Name="MAIN" Id="{fb552e2e-2891-43fb-8d70-9e0b6cdb20cb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+
+VAR
+	
+		// tietue mittauksia varten
+	measurementData : Measurements;
+
+	sinvalues: ARRAY [0..35] OF INT := [0,1736,3420,4999,6427,7660,8660,9396,9848,10000,
+			9848,9396,8660,7660,6427,4999,3420,1736,0,-1736,-3420,-5000,
+			-6427,-7660,-8660,-9396,-9848,-10000,-9848,-9396,-8660,-7660,-6427,-5000,-3420,-1736];	
+
+	start: BOOL; // start-painike
+	reset: BOOL; // reset-painike
+	
+	// yksi ajastin riittaa
+	timer1: TON;
+	// tilat esitetaan INT-muuttujalla
+	// (ENUM olisi vielä parempi)
+	step: INT;
+	counter: INT;
+	// triggeri start-painiketta varten
+	startTriggered: BOOL;
+	trigger: F_TRIG;	
+	
+	sysTime : GETSYSTEMTIME;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+timer1.IN := TRUE;   // timer päälle
+  
+IF reset THEN
+	  step := 0;
+END_IF 
+
+// taytyy ottaa nouseva reuna start-paimikkeesta
+trigger(CLK := start, Q => startTriggered);
+
+
+CASE step OF
+   0 : 
+	// mennään start-painikkeesta tilaan 1
+	IF start THEN
+		// nollataan ajastin
+		timer1(IN := FALSE);
+		step := 1;
+	END_IF
+    
+   1 :    // odotellaan 0.5 sek
+    // asetetaan aika
+    timer1.PT := T#500MS;
+	counter := counter + 1;
+   
+    IF timer1.Q THEN
+		// IN arvoon FALSE ja timerin kutsu
+		timer1(IN := FALSE);
+		// seuraavaan tilaan
+		step := 2;
+    END_IF
+
+   2 : 	// tehdään mittauksia
+	
+   // otetaan kellonaika ja kopioidaan output structiin
+   sysTime(timeLoDW => measurementData.timeLo, 
+	   timeHiDW =>  measurementData.timeHi);
+   
+	measurementData.counter := counter;
+	
+	// generoi mittauksia. amplitudi +/- 1. Jaksonaika 5-10 sekuntia
+	// eri mittausten välillä noin 120 asteen vaihe-ero
+	measurementData.measurement1 := SIN(counter / 24.0);
+	measurementData.measurement2 := 1.1 * SIN(counter / 240.0 + 2);
+	measurementData.measurement3 := 0.9 * SIN(counter / 240.0 + 4);
+   
+   	measurementData.arrayValue := 1;
+	
+	// mennään takaisin odotustilaan
+	step := 1;
+
+  END_CASE	
+  timer1();  
+  
+  
+  
+  ]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
