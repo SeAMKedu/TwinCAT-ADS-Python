@@ -12,6 +12,6 @@ TwinCAT ADS on helppo tapa siirtää tietoa PLC:stä muihin tietojärjestelmiin.
 
 # TwinCAT-ohjelmat ADS-yhteyden testaamista varten
 
-ADS-yhteyden tastaamisessa tarvittava TwinCAT-ohjelma löytyy [täältä](http://github.com).
+ADS-yhteyden tastaamisessa tarvittava TwinCAT-ohjelma löytyy [täältä](/Ads3SinTestPLC/).
 
 
