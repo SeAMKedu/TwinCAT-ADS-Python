@@ -1,9 +1,8 @@
-import pyads
+﻿import pyads
 import requests    
 import time
 import json
 import msvcrt #kbhit
-# sopiva TwinCAT-ohjelma: Y:\Makela_Petteri\AUTE14\Verkko-ohjelmointi\Ads\Ads3SinTestPLC
 
 # yhteyden avaaminen
 pyads.open_port()
