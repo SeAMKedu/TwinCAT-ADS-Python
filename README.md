@@ -1,6 +1,6 @@
 # Ohjelmointiesimerkkejä TwinCAT ADS -rajapinnan käyttöön Python-ohjelmointikielellä
 
-Tässä dokumentissa on selostettu esimerkkien avulla, miten Python ohjelma voi kommunikoida Beckhoffin ohjaimen kanssa käyttäen TwinCATin ADS-rajapintaa.
+Tässä dokumentissa on selostettu esimerkkien avulla, miten Python ohjelma voi kommunikoida Beckhoffin ohjaimen kanssa käyttäen TwinCATin ADS-rajapintaa. 
 
 # TwinCAT ADS
 
@@ -115,11 +115,11 @@ Mittausten arvoja päivitetään puolen sekunnin välein. Ohjelma ei mittaa oike
 
 # ADS-yhteyttä käyttävä Python-ohjelma
 
-Python-ohjelma [adsreader.py](/adsreader.py/) avaa ensin ADS-yhteyden TwinCAT-ohjelmaan ja asettaa TwinCAT-ohjelman muuttujan start arvon TRUEksi. Tämän jälkeen Python-ohjelma lukee mittausdataa ADS-yhteyden kautta.
+Python-ohjelma [adsreader.py](/adsreader.py/) avaa ensin ADS-yhteyden TwinCAT-ohjelmaan ja asettaa TwinCAT-ohjelman muuttujan start arvon TRUEksi. Tämän jälkeen Python-ohjelma lukee mittausdataa ADS-yhteyden kautta. Huom: esimerkkiohjelma ei toimi pyads-kirjaston uusimmilla versioilla. Käytä pyads-kirjaston versiota 3.2.0.
 
 ADS-yhteyden muodostamista varten täytyy asentaa pyads-kirjasto. Lisäksi tarvitaan kirjasto requests, jos mittaukset halutaan välittää HTTP POST -metodilla eteen päin. Kirjastot asennetaan pip-ohjelmalla:
 ```
-pip install pyads
+pip install pyads==3.2.0
 pip install requests
 ```
 Lisää ohjelman alkuun seuraavat import-lauseet:
